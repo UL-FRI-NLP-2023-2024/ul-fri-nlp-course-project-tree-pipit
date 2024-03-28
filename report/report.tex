@@ -38,16 +38,16 @@
 %\Archive{Final report} 
 
 % Article title
-\PaperTitle{Natural language processing course Latex Template} 
+\PaperTitle{Slovenian Instruction-based Corpus Generation} 
 
 % Authors (student competitors) and their info
-\Authors{John Doe, Jane Doe, and Mike Smith}
+\Authors{Jernej Ulčakar, Jon Kuhar, Bella Muradian}
 
 % Advisors
 \affiliation{\textit{Advisors: Slavko Žitnik}}
 
 % Keywords
-\Keywords{Keyword1, Keyword2, Keyword3 ...}
+\Keywords{LLM,Slovene,Training}
 \newcommand{\keywordname}{Keywords}
 
 
@@ -77,10 +77,45 @@ The abstract goes here. The abstract goes here. The abstract goes here. The abst
 %----------------------------------------------------------------------------------------
 
 \section*{Introduction}
-	These latex files are intended to serve as a the template for the NLP course at FRI.  The template is adapted from the FRI Data Science Project Competition. template  If you find mistakes in the template or have problems using it, please consult Jure Demšar (\href{mailto:jure.demsar@fri.uni-lj.si}{jure.demsar@fri.uni-lj.si}).
-	
-	In the Introduction section you should write about the relevance of your work (what is the purpose of the project, what will we solve) and about related work (what solutions for the problem already exist). Where appropriate, reference scientific work conducted by other researchers. For example, the work done by Demšar et al. \cite{Demsar2016BalancedMixture} is very important for our project. The abbreviation et al. is for et alia, which in latin means and others, we use this abbreviation when there are more than two authors of the work we are citing. If there are two authors (or if there is a single author) we just write down their surnames. For example, the work done by Demšar and Lebar Bajec \cite{Demsar2017LinguisticEvolution} is also important for successful completion of our project.
+Large Language Models (LLMs) have shown great promise as highly capable AI assistants that excel in complex reasoning tasks requiring expert knowledge across a wide range of fields, including in specialized domains such as programming and creative writing. They enable interaction with humans through intuitive chat interfaces, which has led to rapid and widespread adoption among the general public.
+In this project we use knowledge from research on InstructGPT to create our multi-lingual LLM fine-tune. This method permits using very low parameter counts compared to the full model. In the case of InstructGPT the original model had 175B parameters and the fine-tune had 1.3B parameters. We use the same methods to construct and train a fine-tune for a multi-lingual that supports slovene.
 
+We trained the model on conversations from slovene forums such as \href{https://forum.over.net/forum/}{Med.Over.Net}, \href{www.slo-tech.com}{slo-tech} and \href{https://www.reddit.com/r/Slovenia/}{Reddit Slovenia}. We collected this data using web crawlers and python scrapers.
+
+%Your task is to get to know LLMs and try to understand their creation from higher levels. Try to prepare large amounts of conversational data in Slovene (this is the focus of this task!) that is correctly organized and of good quality to be fed into fine-tuning a multi-lingual LLM (that supports Slovene). Demonstrate work by adapting a model to fine-tune a conversational agent for Slovene.
+
+%	These latex files are intended to serve as a the template for the NLP course at FRI.  The template is adapted from the FRI Data Science Project Competition. template  If you find mistakes in the template or have problems using it, please consult Jure Demšar (\href{mailto:jure.demsar@fri.uni-lj.si}{jure.demsar@fri.uni-lj.si}).
+	
+%	In the Introduction section you should write about the relevance of your work (what is the purpose of the project, what will we solve) and about related work (what solutions for the problem already exist). Where appropriate, reference scientific work conducted by other researchers. For example, the work done by Demšar et al. \cite{Demsar2016BalancedMixture} is very important for our project. The abbreviation et al. is for et alia, which in latin means and others, we use this abbreviation when there are more than two authors of the work we are citing. If there are two authors (or if there is a single author) we just write down their surnames. For example, the work done by Demšar and Lebar Bajec \cite{Demsar2017LinguisticEvolution} is also important for successful completion of our project.
+
+
+%------------------------------------------------
+
+\section*{Related Works}
+
+\noindent
+\textbf{Llama 2} (2023) \cite{touvron2023llama} is a collection of pretrained and fine-tuned
+large language models (LLMs) ranging in scale from 7 billion to 70 billion parameters.
+They introduced LLMs that are fine-tuned, called Llama 2-Chat, and are optimized for dialogue use cases.
+
+\noindent
+\textbf{BLOOM} (2023) \cite{touvron2023llama} is a collection of pretrained and fine-tuned
+A 176B-parameter open-access language model designed and built thanks to a collaboration of hundreds of researchers. BLOOM is a decoder-only Transformer language model that was trained on the ROOTS corpus \cite{laurençon2023bigscience}, a dataset comprising hundreds of
+sources in 46 natural and 13 programming languages (59 in total). BLOOM achieves competitive performance on a wide variety of benchmarks, with stronger results after undergoing multitask prompted fine-tuning. To facilitate future research and applications using LLMs.
+
+\noindent
+\textbf{Training models} (2022) \cite{ouyang2022training} this paper contains instructions in how to fine-tune language models with user intent on a wide range of tasks by using human feedback.
+Starting with a set of labeler-written prompts and prompts
+submitted through the OpenAI API, they collected a dataset of labeler demonstrations
+of the desired model behavior, which they later used to fine-tune GPT-3 using supervised
+learning and the collect the dataset of rankings of model outputs. These are used to further fine-tune the model using reinforcement learning from human feedback. The model names are InstructGPT. In human evaluations on
+our prompt distribution, outputs from the 1.3B parameter InstructGPT model are
+preferred to outputs from the 175B GPT-3, despite having 100x fewer parameters.
+Moreover, InstructGPT models show improvements in truthfulness and reductions
+in toxic output generation while having minimal performance regressions on public
+NLP datasets. Even though InstructGPT still makes simple mistakes, their results
+show that fine-tuning with human feedback is a promising direction for aligning
+language models with human intent.
 
 %------------------------------------------------
 
