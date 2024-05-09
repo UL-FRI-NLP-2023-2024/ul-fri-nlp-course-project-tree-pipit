@@ -31,7 +31,7 @@
 %----------------------------------------------------------------------------------------
 
 % Header
-\JournalInfo{FRI Natural language processing course 2021}
+\JournalInfo{FRI Natural language processing course 2024}
 
 % Interim or final report
 \Archive{Project report} 
@@ -56,7 +56,7 @@
 %----------------------------------------------------------------------------------------
 
 \Abstract{
-The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here. The abstract goes here.
+This study explores the utilization of web scraping techniques to extract and analyze data from online forums. Through scraping scripts, we gathered a substantial corpus of forum posts and comments.  This corpus was then parsed with scripts.
 }
 
 %----------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ The abstract goes here. The abstract goes here. The abstract goes here. The abst
 Large Language Models (LLMs) have shown great promise as highly capable AI assistants that excel in complex reasoning tasks requiring expert knowledge across a wide range of fields, including in specialized domains such as programming and creative writing. They enable interaction with humans through intuitive chat interfaces, which has led to rapid and widespread adoption among the general public.
 In this project we use knowledge from research on InstructGPT to create our multi-lingual LLM fine-tune. This method permits using very low parameter counts compared to the full model. In the case of InstructGPT the original model had 175B parameters and the fine-tune had 1.3B parameters. We use the same methods to construct and train a fine-tune for a multi-lingual that supports slovene.
 
-We trained the model on conversations from slovene forums such as \href{https://forum.over.net/forum/}{Med.Over.Net}, \href{www.slo-tech.com}{slo-tech} and \href{https://www.reddit.com/r/Slovenia/}{Reddit Slovenia}. We collected this data using web crawlers and python scrapers.
+We trained the model on conversations from slovene forums such as \href{https://forum.over.net/forum/}{Med.Over.Net}, \href{www.slo-tech.com}{slo-tech} and \href{https://www.reddit.com/r/Slovenia/}{Reddit Slovenia}. We collected this data using WinHTTracker scraper and python for parsing.
 
 %Your task is to get to know LLMs and try to understand their creation from higher levels. Try to prepare large amounts of conversational data in Slovene (this is the focus of this task!) that is correctly organized and of good quality to be fed into fine-tuning a multi-lingual LLM (that supports Slovene). Demonstrate work by adapting a model to fine-tune a conversational agent for Slovene.
 
@@ -121,6 +121,19 @@ language models with human intent.
 
 \section*{Methods}
 
+We employed WinHTTrack, a powerful web scraping tool, to scrape data from three distinct online forums: Med.Over.Net, slo-tech.com and forum.over.net.
+
+
+\begin{itemize}
+    \item \textbf{WinHTTrack Configuration}: We configured WinHTTrack to navigate through the forum websites systematically, simulating user interactions to access all accessible content, including posts and comments.
+    \item \textbf{Customized Scraping Scripts}: To ensure efficient parsing of the forums' diverse structures and functionalities, we developed customized scraping scripts tailored to each website's specific layout and navigation protocols. These scripts enabled targeted extraction of forum data while maintaining compliance with the websites' terms of service.
+    \item \textbf{Data Extraction}: Using WinHTTrack, we initiated the scraping process, allowing the tool to systematically crawl through the target forums and retrieve HTML content representing forum pages, threads, and posts.
+\item \textbf{Data Preprocessing}: Upon completion of the scraping process, we conducted data preprocessing steps to clean and structure the extracted HTML content. This involved parsing the HTML files to extract relevant text data, removing noise, and organizing the data into a structured format suitable for further analysis.
+\item \textbf{Quality Assurance}: To ensure data integrity and accuracy, we performed regular checks during the scraping process, monitoring for any anomalies or errors in the extracted data. Additionally, we implemented safeguards to prevent overloading the forum servers and to maintain ethical data scraping practices.
+\end{itemize}
+Through these methods, we successfully parsed data from Med.Over.Net, slo-tech.com/forum, and forum.over.net, enabling subsequent analysis of forum content to uncover valuable insights into user behavior, discussion trends, and community dynamics.
+
+\iffalse
 Use the Methods section to describe what you did an how you did it -- in what way did you prepare the data, what algorithms did you use, how did you test various solutions ... Provide all the required details for a reproduction of your work.
 
 Below are \LaTeX examples of some common elements that you will probably need when writing your report (e.g. figures, equations, lists, code examples ...).
@@ -235,11 +248,13 @@ ggplot(diamonds,
 \end{lstlisting}
 
 %------------------------------------------------
-
+\fi
 \section*{Results}
 
+Parsing the data was very well done. The only junk remaining was inside the posted content of each user as well as the users type of speech (this includes typos and accent-like typing).
+\iffalse
 Use the results section to present the final results of your work. Present the results in a objective and scientific fashion. Use visualisations to convey your results in a clear and efficient manner. When comparing results between various techniques use appropriate statistical methodology.
-
+\fi
 \subsection*{More random text}
 
 This text is inserted only to make this template look more like a proper report. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam blandit dictum facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam convallis tellus velit, quis ornare ipsum aliquam id. Maecenas tempus mauris sit amet libero elementum eleifend. Nulla nunc orci, consectetur non consequat ac, consequat non nisl. Aenean vitae dui nec ex fringilla malesuada. Proin elit libero, faucibus eget neque quis, condimentum laoreet urna. Etiam at nunc quis felis pulvinar dignissim. Phasellus turpis turpis, vestibulum eget imperdiet in, molestie eget neque. Curabitur quis ante sed nunc varius dictum non quis nisl. Donec nec lobortis velit. Ut cursus, libero efficitur dictum imperdiet, odio mi fermentum dui, id vulputate metus velit sit amet risus. Nulla vel volutpat elit. Mauris ex erat, pulvinar ac accumsan sit amet, ultrices sit amet turpis.
@@ -257,11 +272,11 @@ Use the Discussion section to objectively evaluate your work, do not just put pr
 
 
 %------------------------------------------------
-
+\iffalse
 \section*{Acknowledgments}
 
 Here you can thank other persons (advisors, colleagues ...) that contributed to the successful completion of your project.
-
+\fi
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
