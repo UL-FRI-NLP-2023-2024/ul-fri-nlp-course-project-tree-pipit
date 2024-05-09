@@ -1,0 +1,7 @@
+urls:
+
+https://slo-tech.com/forum slo-tech.com/forum/7 slo-tech.com/forum/46 slo-tech.com/forum/45 slo-tech.com/forum/4 slo-tech.com/forum/5 slo-tech.com/forum/6 slo-tech.com/forum/8 slo-tech.com/forum/9 slo-tech.com/forum/29 slo-tech.com/forum/10 slo-tech.com/forum/11 slo-tech.com/forum/12 slo-tech.com/forum/13 slo-tech.com/forum/15 slo-tech.com/forum/25 slo-tech.com/forum/41 slo-tech.com/forum/28 slo-tech.com/forum/40 slo-tech.com/forum/53 slo-tech.com/forum/27 slo-tech.com/forum/26 slo-tech.com/forum/51 slo-tech.com/forum/49 slo-tech.com/forum/20 slo-tech.com/forum/16 slo-tech.com/forum/17 slo-tech.com/forum/42
+
+scan rules:
+
+-* +*slo-tech.com/forum +*slo-tech.com/forum/t* -*slo-tech.com/forum/t*/p* -*slo-tech.com/forum/t*/0 +*slo-tech.com/forum/7/* +*slo-tech.com/forum/46/* +*slo-tech.com/forum/45/* +*slo-tech.com/forum/4/* +*slo-tech.com/forum/5/* +*slo-tech.com/forum/6/* +*slo-tech.com/forum/8/* +*slo-tech.com/forum/9/* +*slo-tech.com/forum/29/* +*slo-tech.com/forum/10/* +*slo-tech.com/forum/11/* +*slo-tech.com/forum/12/* +*slo-tech.com/forum/13/* +*slo-tech.com/forum/15/* +*slo-tech.com/forum/25/* +*slo-tech.com/forum/41/* +*slo-tech.com/forum/28/* +*slo-tech.com/forum/40/* +*slo-tech.com/forum/53/* +*slo-tech.com/forum/27/* +*slo-tech.com/forum/26/* +*slo-tech.com/forum/51/* +*slo-tech.com/forum/49/* +*slo-tech.com/forum/20/* +*slo-tech.com/forum/16/* +*slo-tech.com/forum/17/* +*slo-tech.com/forum/42/*

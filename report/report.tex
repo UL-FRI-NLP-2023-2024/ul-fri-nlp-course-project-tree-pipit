@@ -133,6 +133,20 @@ We employed WinHTTrack, a powerful web scraping tool, to scrape data from three 
 \end{itemize}
 Through these methods, we successfully parsed data from Med.Over.Net, slo-tech.com/forum, and forum.over.net, enabling subsequent analysis of forum content to uncover valuable insights into user behavior, discussion trends, and community dynamics.
 
+\subsection{Scraping slo\-tech.com forums}
+
+Slo-tech is the biggest slovenian computer forum that has existed for over two decades. On the front page of the forum we see the split into many subforums in the format of \texttt{/forum/\{id\}}. The subforums are not listed in increasing order and not all ids are taken. The lowest id forum is ''Zvok in slika", \texttt{/forum/4}. There are two special subforums that are not scraped as they link to threads in other subforums, ''Teme zadnjih 24 ur" (Threads made in the last 24 hours) and ''Neodgovorjene teme" (Threads without responses).
+
+The next pages on the forum are accessed with \\ \texttt{/forum/\{id\}/1}, \texttt{/forum/\{id\}/2} and so on. \\ \texttt{/forum/\{id\}/0} is also theoretically valid for the access of the first page but this is not used inside of the pages for the scraper to pick up.
+
+The threads have url structure \texttt{/forum/t\{id\}}. They contain up to 50 messages. Next pages are accessed with \texttt{/forum/t\{id\}/\{n\}}. $n$ represents the number of the next message shown so page 2 is \texttt{/49}, page 3 is \texttt{/99} and so on. For large pages the navigation includes \texttt{/konec} to jump to the last page. The first page is linked to as \texttt{/0}. We set up the scraper to ignore the \texttt{/0} and \texttt{/konec} as they lead to duplicated pages.
+
+At the bottom of threads there is usually a table of related posts. These do not necessarily link to the same subforum This is a bit of a problem if we want to be selective about scraping a specific subforum. There is no info in the url of a thread to indicate the subforum it is in.
+
+The robots.txt of slo-tech permits accessing all forum pages but not user pages \texttt{/profili} and the lists of user threads \texttt{/u\{id\}}, user comments \texttt{/c\{id\}} and threads contributed to by a user \texttt{/s\{id\}}. This is fine for us as we do not need to scrape user profiles.
+
+Important parameters used for the scraper, the initial urls and scan rules, are available in the github repository in the \texttt{scraping} directory.
+
 \iffalse
 Use the Methods section to describe what you did an how you did it -- in what way did you prepare the data, what algorithms did you use, how did you test various solutions ... Provide all the required details for a reproduction of your work.
 
