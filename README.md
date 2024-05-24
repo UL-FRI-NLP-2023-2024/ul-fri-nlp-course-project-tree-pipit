@@ -17,3 +17,6 @@ Large Language Models (LLMs) have shown great promise as highly capable AI assis
 - Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L. Wainwright, Pamela Mishkin, Chong Zhang, Sandhini Agarwal, Katarina Slama, Alex Ray, John Schulman, Jacob Hilton, Fraser Kelton, Luke Miller, Maddie Simens, Amanda Askell, Peter Welinder, Paul Christiano, Jan Leike, Ryan Lowe, Training language models to follow instructions with human feedback, https://arxiv.org/abs/2203.02155.
 - Touvron, H., Martin, L., Stone, K., Albert, P., Almahairi, A., Babaei, Y., ... & Scialom, T. (2023). Llama 2: Open foundation and fine-tuned chat models. https://arxiv.org/abs/2307.09288.
 - Teven Le Scao, Angela Fan, Christopher Akiki, Ellie Pavlick, Suzana Ilić, Daniel Hesslow, Roman Castagné, Alexandra Sasha Luccioni, François Yvon, Matthias Gallé, Jonathan Tow, Alexander M. Rush, ...  et al. (300+ additional authors not shown), BLOOM: A 176B-Parameter Open-Access Multilingual Language Model, https://arxiv.org/abs/2211.05100, model: https://huggingface.co/bigscience/bloom 
+
+### Requirements:
+In order to fetch all of the required packages, please download the requirements.txt and run **pip install -r "requirements.txt"**
