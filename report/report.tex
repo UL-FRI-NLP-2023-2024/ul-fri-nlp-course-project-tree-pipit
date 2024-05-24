@@ -57,7 +57,7 @@
 %----------------------------------------------------------------------------------------
 
 \Abstract{
-This study explores the utilization of vast human conversation over web forums to train a multilingual fine-tune of existing large language models (LLM), efficient enough to train and run on consumer-grade hardware.
+This study explores the utilization of vast human conversation over web forums to train a multilingual fine-tune of existing large language models, efficient enough to train and run on consumer-grade hardware.
 }
 
 %----------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ This study explores the utilization of vast human conversation over web forums t
 \section*{Introduction}
 Large Language Models (LLMs) have shown great promise as highly capable AI assistants that excel in complex reasoning tasks requiring expert knowledge across a wide range of fields, including in specialized domains such as programming and creative writing. They enable interaction with humans through intuitive chat interfaces, which has led to rapid and widespread adoption among the general public.
 
-We fine tune a model on conversations from slovene forums such as \href{https://forum.over.net/forum/}{Med.Over.Net}, \href{www.slo-tech.com}{slo-tech} and \href{https://www.reddit.com/r/Slovenia/}{Reddit Slovenia}. We collected this data using WinHTTracker scraper and python for parsing.
+We fine tune a model on conversations from slovene forums \href{https://forum.over.net/forum/}{Med.Over.Net} and \href{www.slo-tech.com}{slo-tech}. We collected this data using WinHTTracker scraper and python for parsing.
 
 For the base model we used \href{https://github.com/tloen/alpaca-lora}{Alpaca-lora}, the \emph{low-rank adaptation} (LoRA)\cite{hu2021lowrank} of the Alpaca\cite{Bommasani2021FoundationModels} model. This model is itself a fine-tune of the Llama\cite{touvron2023llama} model. It is fine-tuned with a large set of conversations and was relatively cheap to make. The LoRA version is even more concise, allowing for very cheap further training, doable on consumer hardware.
 The model should have a basic understanding of the slovenian language because Llama's training dataset contains 4.5\% wikipedia dumps from June-August 2022. These dumps cover 20 languages, including slovenian.
@@ -191,7 +191,7 @@ lora\_dropout=0.05
 
 \subsection*{Evaluation}
 
-We used the human evaluation instructions from Self-instruct\ref{}, translating a small set to slovene and evaluating it.
+We used the human evaluation instructions from Self-instruct\cite{wang2023selfinstruct}, translating a small set to slovene and evaluating it.
 
 \iffalse
 Use the Methods section to describe what you did an how you did it -- in what way did you prepare the data, what algorithms did you use, how did you test various solutions ... Provide all the required details for a reproduction of your work.
@@ -309,9 +309,24 @@ ggplot(diamonds,
 %------------------------------------------------
 \fi
 \section*{Results}
-The scraping statistics are in table~\ref{}. We expected to get rate limited but that only happened late when enough threads were already scraped.
+For scraping, we expected to get rate limited but that only happened late when enough threads were already scraped. The data transfer speed was fastest for slo-tech so the most posts were scraped from there. It also had more posts per html file.
 
-The results of data parsing are in table~\ref{}. The data was parsed well. The only junk remaining was inside the posted content of each user as well as the users type of speech (this includes typos and accent-like typing). Generating instructions was also without issues.
+The results of data parsing are in table~\ref{tab:parse}. The data was parsed well. The only junk remaining was inside the posted content of each user as well as the users type of speech (this includes typos and accent-like typing). Generating instructions was also without issues.
+
+\begin{table}[hbt]
+	\caption{Parsing statistics.}
+	\centering
+	\begin{tabular}{c|c|c}
+		\toprule
+		Forum & Threads & Posts \\
+		\midrule
+		MedOverNet & 2507 & 14785 \\
+		  ForumOverNet & 1360 & 15408 \\
+		  slo-tech & 15242 & 372559 \\
+		\bottomrule
+	\end{tabular}
+	\label{tab:parse}
+\end{table}
 
 The training was done on \href{https://cloud.vast.ai/create/}{vast.ai}. The GPU we used was an RTX 6000Ada with 81.4 TFlops and 48GB of VRAM. The VRAM was underutilized, only using up to 10GB while training. This means we could have used a less performant GPU without running out of memory.
 
@@ -326,8 +341,9 @@ Use the results section to present the final results of your work. Present the r
 
 \section*{Discussion}
 
-Use the Discussion section to objectively evaluate your work, do not just put praise on everything you did, be critical and exposes flaws and weaknesses of your solution. You can also explain what you would do differently if you would be able to start again and what upgrades could be done on the project in the future.
+A possible forum to scrape is \href{https://www.reddit.com/r/Slovenia/}{Reddit Slovenia}. Reddit does not allow scraping that easily so we did not end up using it.
 
+If starting again, we would have used a different approach for instruction generation that seems more promising. Large conversations could instead be used to help create better translators. Then we can just translate the original 52k datapoint training set from Alpaca and fine-tune using that. This has already been done on some languages as seen on the Alpaca-lora repository readme.
 
 %------------------------------------------------
 \iffalse
