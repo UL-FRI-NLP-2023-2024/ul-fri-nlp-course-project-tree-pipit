@@ -23,7 +23,8 @@
 
 \graphicspath{{fig/}}
 
-
+\usepackage[bibstyle=authoryear,maxnames=2,minnames=1]{biblatex}
+\addbibresource{report.bib}
 
 
 %----------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@
 %----------------------------------------------------------------------------------------
 
 \Abstract{
-This study explores the utilization of web scraping techniques to extract and analyze data from online forums. Through scraping scripts, we gathered a substantial corpus of forum posts and comments.  This corpus was then parsed with scripts.
+This study explores the utilization of vast human conversation over web forums to train a multilingual fine-tune of existing large language models (LLM), efficient enough to train and run on consumer-grade hardware.
 }
 
 %----------------------------------------------------------------------------------------
@@ -81,7 +82,7 @@ Large Language Models (LLMs) have shown great promise as highly capable AI assis
 
 We fine tune a model on conversations from slovene forums such as \href{https://forum.over.net/forum/}{Med.Over.Net}, \href{www.slo-tech.com}{slo-tech} and \href{https://www.reddit.com/r/Slovenia/}{Reddit Slovenia}. We collected this data using WinHTTracker scraper and python for parsing.
 
-For the base model we used \href{https://github.com/tloen/alpaca-lora}{Alpaca-lora}, the \emph{low-rank adaptation} (LoRA)\ref{} of the Alpaca\ref{} model. This model is itself a fine-tune of the Llama\ref{} model. It is fine-tuned with a large set of conversations and was relatively cheap to make. The LoRA version is even more concise, allowing for very cheap further training, doable on consumer hardware.
+For the base model we used \href{https://github.com/tloen/alpaca-lora}{Alpaca-lora}, the \emph{low-rank adaptation} (LoRA)\cite{hu2021lowrank} of the Alpaca\cite{Bommasani2021FoundationModels} model. This model is itself a fine-tune of the Llama\cite{touvron2023llama} model. It is fine-tuned with a large set of conversations and was relatively cheap to make. The LoRA version is even more concise, allowing for very cheap further training, doable on consumer hardware.
 The model should have a basic understanding of the slovenian language because Llama's training dataset contains 4.5\% wikipedia dumps from June-August 2022. These dumps cover 20 languages, including slovenian.
 
 We published the code and the model weights on \href{https://github.com/UL-FRI-NLP-2023-2024/ul-fri-nlp-course-project-tree-pipit/}{github}.
@@ -103,12 +104,12 @@ large language models (LLMs) ranging in scale from 7 billion to 70 billion param
 They introduced LLMs that are fine-tuned, called Llama 2-Chat, and are optimized for dialogue use cases.
 
 \noindent
-\textbf{BLOOM} (2023) \cite{touvron2023llama} is a collection of pretrained and fine-tuned
+\textbf{BLOOM} (2023) \cite{workshop2023bloom} is a collection of pretrained and fine-tuned
 A 176B-parameter open-access language model designed and built thanks to a collaboration of hundreds of researchers. BLOOM is a decoder-only Transformer language model that was trained on the ROOTS corpus \cite{laurençon2023bigscience}, a dataset comprising hundreds of
 sources in 46 natural and 13 programming languages (59 in total). BLOOM achieves competitive performance on a wide variety of benchmarks, with stronger results after undergoing multitask prompted fine-tuning. To facilitate future research and applications using LLMs.
 
 \noindent
-\textbf{Training models} (2022) \cite{ouyang2022training} this paper contains instructions in how to fine-tune language models with user intent on a wide range of tasks by using human feedback.
+\textbf{Training models} (2022) \cite{Ouyang2022TrainingLM} this paper contains instructions in how to fine-tune language models with user intent on a wide range of tasks by using human feedback.
 Starting with a set of labeler-written prompts and prompts
 submitted through the OpenAI API, they collected a dataset of labeler demonstrations
 of the desired model behavior, which they later used to fine-tune GPT-3 using supervised
@@ -338,8 +339,9 @@ Here you can thank other persons (advisors, colleagues ...) that contributed to 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
 %----------------------------------------------------------------------------------------
-\bibliographystyle{unsrt}
-\bibliography{report}
+\printbibliography
+%\bibliographystyle{unsrt}
+%\bibliography{report}
 
 
 \end{document}
