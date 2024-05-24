@@ -78,9 +78,13 @@ This study explores the utilization of web scraping techniques to extract and an
 
 \section*{Introduction}
 Large Language Models (LLMs) have shown great promise as highly capable AI assistants that excel in complex reasoning tasks requiring expert knowledge across a wide range of fields, including in specialized domains such as programming and creative writing. They enable interaction with humans through intuitive chat interfaces, which has led to rapid and widespread adoption among the general public.
-In this project we use knowledge from research on InstructGPT to create our multi-lingual LLM fine-tune. This method permits using very low parameter counts compared to the full model. In the case of InstructGPT the original model had 175B parameters and the fine-tune had 1.3B parameters. We use the same methods to construct and train a fine-tune for a multi-lingual that supports slovene.
 
-We trained the model on conversations from slovene forums such as \href{https://forum.over.net/forum/}{Med.Over.Net}, \href{www.slo-tech.com}{slo-tech} and \href{https://www.reddit.com/r/Slovenia/}{Reddit Slovenia}. We collected this data using WinHTTracker scraper and python for parsing.
+We fine tune a model on conversations from slovene forums such as \href{https://forum.over.net/forum/}{Med.Over.Net}, \href{www.slo-tech.com}{slo-tech} and \href{https://www.reddit.com/r/Slovenia/}{Reddit Slovenia}. We collected this data using WinHTTracker scraper and python for parsing.
+
+For the base model we used \href{https://github.com/tloen/alpaca-lora}{Alpaca-lora}, the \emph{low-rank adaptation} (LoRA)\ref{} of the Alpaca\ref{} model. This model is itself a fine-tune of the Llama\ref{} model. It is fine-tuned with a large set of conversations and was relatively cheap to make. The LoRA version is even more concise, allowing for very cheap further training, doable on consumer hardware.
+The model should have a basic understanding of the slovenian language because Llama's training dataset contains 4.5\% wikipedia dumps from June-August 2022. These dumps cover 20 languages, including slovenian.
+
+We published the code and the model weights on \href{https://github.com/UL-FRI-NLP-2023-2024/ul-fri-nlp-course-project-tree-pipit/}{github}.
 
 %Your task is to get to know LLMs and try to understand their creation from higher levels. Try to prepare large amounts of conversational data in Slovene (this is the focus of this task!) that is correctly organized and of good quality to be fed into fine-tuning a multi-lingual LLM (that supports Slovene). Demonstrate work by adapting a model to fine-tune a conversational agent for Slovene.
 
@@ -121,19 +125,17 @@ language models with human intent.
 
 \section*{Methods}
 
-We employed WinHTTrack, a powerful web scraping tool, to scrape data from three distinct online forums: Med.Over.Net, slo-tech.com and forum.over.net.
+\subsection*{Scraping}
 
+We used WinHTTrack, a powerful web scraping tool, to scrape data from three online forums: Med.Over.Net, slo-tech.com and forum.over.net.
 
-\begin{itemize}
-    \item \textbf{WinHTTrack Configuration}: We configured WinHTTrack to navigate through the forum websites systematically, simulating user interactions to access all accessible content, including posts and comments.
-    \item \textbf{Customized Scraping Scripts}: To ensure efficient parsing of the forums' diverse structures and functionalities, we developed customized scraping scripts tailored to each website's specific layout and navigation protocols. These scripts enabled targeted extraction of forum data while maintaining compliance with the websites' terms of service.
-    \item \textbf{Data Extraction}: Using WinHTTrack, we initiated the scraping process, allowing the tool to systematically crawl through the target forums and retrieve HTML content representing forum pages, threads, and posts.
-\item \textbf{Data Preprocessing}: Upon completion of the scraping process, we conducted data preprocessing steps to clean and structure the extracted HTML content. This involved parsing the HTML files to extract relevant text data, removing noise, and organizing the data into a structured format suitable for further analysis.
-\item \textbf{Quality Assurance}: To ensure data integrity and accuracy, we performed regular checks during the scraping process, monitoring for any anomalies or errors in the extracted data. Additionally, we implemented safeguards to prevent overloading the forum servers and to maintain ethical data scraping practices.
-\end{itemize}
-Through these methods, we successfully parsed data from Med.Over.Net, slo-tech.com/forum, and forum.over.net, enabling subsequent analysis of forum content to uncover valuable insights into user behavior, discussion trends, and community dynamics.
+We configured WinHTTrack to navigate through the forum websites systematically, crawling through the existing links to access all posts and comments.
 
-\subsection{Scraping slo\-tech.com forums}
+Each website contains more than just discussions with comments, for example user pages, about info, links to outside of the page. To ensure efficient parsing, we needed to analize the structure of each forum's urls to make sure only the urls corresponding to forum threads are crawled. An example of the process for the site slotech.com is in \ref{sssection:sloforum}.
+
+We made sure to respect the forums' \texttt{robots.txt}. This is done automatically by WinHTTrack and actually simplified the process as all the rulesets prevented scraping of data we didn't want to scrape anyway.
+
+\subsubsection*{Scraping slo\-tech.com forums}\label{sssection:sloforum}
 
 Slo-tech is the biggest slovenian computer forum that has existed for over two decades. On the front page of the forum we see the split into many subforums in the format of \texttt{/forum/\{id\}}. The subforums are not listed in increasing order and not all ids are taken. The lowest id forum is ''Zvok in slika", \texttt{/forum/4}. There are two special subforums that are not scraped as they link to threads in other subforums, ''Teme zadnjih 24 ur" (Threads made in the last 24 hours) and ''Neodgovorjene teme" (Threads without responses).
 
@@ -145,7 +147,50 @@ At the bottom of threads there is usually a table of related posts. These do not
 
 The robots.txt of slo-tech permits accessing all forum pages but not user pages \texttt{/profili} and the lists of user threads \texttt{/u\{id\}}, user comments \texttt{/c\{id\}} and threads contributed to by a user \texttt{/s\{id\}}. This is fine for us as we do not need to scrape user profiles.
 
-Important parameters used for the scraper, the initial urls and scan rules, are available in the github repository in the \texttt{scraping} directory.
+Important parameters used for the scraper, the initial urls and scan rules, are available in the github repository in the \texttt{scripts/scraping} directory.
+
+\subsection*{Parsing data}
+
+Similarly to scraping, each forum had a different structure in the html. To parse this structure we developed parsers in python using the \texttt{BeautifulSoup} library. We use this on each thread to extract the users, dates, content and quoted content. Not all of this data is going to be used, but it was still collected for completeness. The threads are collected into a json file. The code used for parsing is available in the \texttt{scripts/parsing} directory and the parsed files are in \texttt{results/parsing}.
+
+\subsection*{Generating instructions}
+
+The original training of the Alpaca model was done by fine-tuning on a list of 52k data points in the format of:
+
+\lstset{language=Python}
+\lstset{label={lst:code_direct}}
+\begin{lstlisting}
+{
+    "instruction": "...",
+    "input": "...",
+    "output": "..."
+}
+\end{lstlisting}
+
+Our fine-tuning script will also use this format to keep the original training script with minimal modifications.
+
+Because many threads start with a question, we decided to format our instruction set such that the title and original posts are combined as the instruction. Because many of the first responses directly address and answer the question we use these as the output.
+
+The code used for transforming our parsed data into this format is in \texttt{scripts/generate}, the instruction set is in \texttt{results/generate}.
+
+\subsection*{Training}
+
+The training script was only slightly modified from the original Alpaca-lora's training script. Since we wanted to keep the lora focused on instruction responses, the initial weights were set to those from Alpaca-lora. We used the following hyperparameters:
+\begin{center}
+batch\_size=128,
+micro\_batch\_size=4,
+num\_epochs=3,
+learning\_rate=0.0003,
+cutoff\_len=256,
+val\_set\_size=2000,
+lora\_r=8,
+lora\_alpha=16,
+lora\_dropout=0.05
+\end{center}
+
+\subsection*{Evaluation}
+
+We used the human evaluation instructions from Self-instruct\ref{}, translating a small set to slovene and evaluating it.
 
 \iffalse
 Use the Methods section to describe what you did an how you did it -- in what way did you prepare the data, what algorithms did you use, how did you test various solutions ... Provide all the required details for a reproduction of your work.
@@ -195,7 +240,6 @@ We can use the description environment to define or describe key terms and phras
 This text is inserted only to make this template look more like a proper report. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam blandit dictum facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam convallis tellus velit, quis ornare ipsum aliquam id. Maecenas tempus mauris sit amet libero elementum eleifend. Nulla nunc orci, consectetur non consequat ac, consequat non nisl. Aenean vitae dui nec ex fringilla malesuada. Proin elit libero, faucibus eget neque quis, condimentum laoreet urna. Etiam at nunc quis felis pulvinar dignissim. Phasellus turpis turpis, vestibulum eget imperdiet in, molestie eget neque. Curabitur quis ante sed nunc varius dictum non quis nisl. Donec nec lobortis velit. Ut cursus, libero efficitur dictum imperdiet, odio mi fermentum dui, id vulputate metus velit sit amet risus. Nulla vel volutpat elit. Mauris ex erat, pulvinar ac accumsan sit amet, ultrices sit amet turpis.
 
 Phasellus in ligula nunc. Vivamus sem lorem, malesuada sed pretium quis, varius convallis lectus. Quisque in risus nec lectus lobortis gravida non a sem. Quisque et vestibulum sem, vel mollis dolor. Nullam ante ex, scelerisque ac efficitur vel, rhoncus quis lectus. Pellentesque scelerisque efficitur purus in faucibus. Maecenas vestibulum vulputate nisl sed vestibulum. Nullam varius turpis in hendrerit posuere.
-
 
 \subsection*{Figures}
 
@@ -264,18 +308,17 @@ ggplot(diamonds,
 %------------------------------------------------
 \fi
 \section*{Results}
+The scraping statistics are in table~\ref{}. We expected to get rate limited but that only happened late when enough threads were already scraped.
 
-Parsing the data was very well done. The only junk remaining was inside the posted content of each user as well as the users type of speech (this includes typos and accent-like typing).
+The results of data parsing are in table~\ref{}. The data was parsed well. The only junk remaining was inside the posted content of each user as well as the users type of speech (this includes typos and accent-like typing). Generating instructions was also without issues.
+
+The training was done on \href{https://cloud.vast.ai/create/}{vast.ai}. The GPU we used was an RTX 6000Ada with 81.4 TFlops and 48GB of VRAM. The VRAM was underutilized, only using up to 10GB while training. This means we could have used a less performant GPU without running out of memory.
+
+In total, training took 3h for 300 iterations.
+
 \iffalse
 Use the results section to present the final results of your work. Present the results in a objective and scientific fashion. Use visualisations to convey your results in a clear and efficient manner. When comparing results between various techniques use appropriate statistical methodology.
 \fi
-\subsection*{More random text}
-
-This text is inserted only to make this template look more like a proper report. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam blandit dictum facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam convallis tellus velit, quis ornare ipsum aliquam id. Maecenas tempus mauris sit amet libero elementum eleifend. Nulla nunc orci, consectetur non consequat ac, consequat non nisl. Aenean vitae dui nec ex fringilla malesuada. Proin elit libero, faucibus eget neque quis, condimentum laoreet urna. Etiam at nunc quis felis pulvinar dignissim. Phasellus turpis turpis, vestibulum eget imperdiet in, molestie eget neque. Curabitur quis ante sed nunc varius dictum non quis nisl. Donec nec lobortis velit. Ut cursus, libero efficitur dictum imperdiet, odio mi fermentum dui, id vulputate metus velit sit amet risus. Nulla vel volutpat elit. Mauris ex erat, pulvinar ac accumsan sit amet, ultrices sit amet turpis.
-
-Phasellus in ligula nunc. Vivamus sem lorem, malesuada sed pretium quis, varius convallis lectus. Quisque in risus nec lectus lobortis gravida non a sem. Quisque et vestibulum sem, vel mollis dolor. Nullam ante ex, scelerisque ac efficitur vel, rhoncus quis lectus. Pellentesque scelerisque efficitur purus in faucibus. Maecenas vestibulum vulputate nisl sed vestibulum. Nullam varius turpis in hendrerit posuere.
-
-Nulla rhoncus tortor eget ipsum commodo lacinia sit amet eu urna. Cras maximus leo mauris, ac congue eros sollicitudin ac. Integer vel erat varius, scelerisque orci eu, tristique purus. Proin id leo quis ante pharetra suscipit et non magna. Morbi in volutpat erat. Vivamus sit amet libero eu lacus pulvinar pharetra sed at felis. Vivamus non nibh a orci viverra rhoncus sit amet ullamcorper sem. Ut nec tempor dui. Aliquam convallis vitae nisi ac volutpat. Nam accumsan, erat eget faucibus commodo, ligula dui cursus nisi, at laoreet odio augue id eros. Curabitur quis tellus eget nunc ornare auctor.
 
 
 %------------------------------------------------
